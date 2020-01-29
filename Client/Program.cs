@@ -20,7 +20,7 @@ namespace Client
                 var Server = new IPEndPoint(IPAddress.Parse(IP), Port);
                 //
 
-                using (UdpClient Client = new UdpClient())
+                using (var Client = new UdpClient())
                 {
                     try
                     {
