@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Client
 {
@@ -14,9 +15,9 @@ namespace Client
             while (true)
             {
                 // Decryption Server.
-                string IP = "127.0.0.1";
-                int PortNumber = 11000;
-                IPEndPoint Server = new IPEndPoint(IPAddress.Parse(IP), PortNumber);
+                var IP = "127.0.0.1";
+                var Port = 11000;
+                var Server = new IPEndPoint(IPAddress.Parse(IP), Port);
                 //
 
                 using (UdpClient Client = new UdpClient())
@@ -33,7 +34,7 @@ namespace Client
                         string TranslatePacket = PacketXOR(Encoding.UTF8.GetString(ReceivePacket));
 
                         // Logging.
-                        if (System.Text.RegularExpressions.Regex.Match(TranslatePacket, @"^Error: \b").Success)
+                        if (Regex.Match(TranslatePacket, @"^Error: \b").Success)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                         }

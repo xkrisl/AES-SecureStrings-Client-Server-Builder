@@ -11,12 +11,11 @@ namespace Server
         static void Main(string[] args)
         {
             // Setup.
-            IPAddress IP = IPAddress.Any;
-            int Port = 11000;
-            IPEndPoint RemoteHost = new IPEndPoint(IP, Port);
+            var Port = 11000;
+            IPEndPoint RemoteHost = new IPEndPoint(IPAddress.Any, Port);
             //
 
-            using (UdpClient udpServer = new UdpClient(Port))
+            using (var Server = new UdpClient(Port))
             {
                 SecurityController _security = new SecurityController();
                 // Password for decrypting AES protected strings the client is sending you.
@@ -27,11 +26,11 @@ namespace Server
                     try
                     {
                         // Receive the packet, translate and send back.
-                        byte[] ReceivePacket = udpServer.Receive(ref RemoteHost);
+                        byte[] ReceivePacket = Server.Receive(ref RemoteHost);
                         string TranslatePacket = _security.Decrypt(AESPassword, PacketXOR(Encoding.UTF8.GetString(ReceivePacket)));
 
                         byte[] SendPacket = Encoding.ASCII.GetBytes(PacketXOR(TranslatePacket));
-                        udpServer.Send(SendPacket, SendPacket.Length, RemoteHost);
+                        Server.Send(SendPacket, SendPacket.Length, RemoteHost);
 
                         // Logging.
                         Console.WriteLine($"IP: {RemoteHost.ToString()}");
@@ -44,7 +43,7 @@ namespace Server
                     {
                         // Sending the exception back to the remote host.
                         byte[] SendExPacket = Encoding.ASCII.GetBytes(PacketXOR($"Error: {ex.Message.ToString()}"));
-                        udpServer.Send(SendExPacket, SendExPacket.Length, RemoteHost);
+                        Server.Send(SendExPacket, SendExPacket.Length, RemoteHost);
 
                         // Logging.
                         Console.ForegroundColor = ConsoleColor.Red;
