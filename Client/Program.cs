@@ -10,16 +10,16 @@ namespace Client
     {
         static void Main(string[] args)
         {
+            // Decryption Server.
+            var IP = "127.0.0.1";
+            var Port = 11000;
+            var Server = new IPEndPoint(IPAddress.Parse(IP), Port);
+            //
+
             Console.WriteLine("Send your string...");
 
             while (true)
             {
-                // Decryption Server.
-                var IP = "127.0.0.1";
-                var Port = 11000;
-                var Server = new IPEndPoint(IPAddress.Parse(IP), Port);
-                //
-
                 using (var Client = new UdpClient())
                 {
                     try
@@ -45,7 +45,9 @@ namespace Client
 
                         Console.Write(TranslatePacket + "\n\n");
                         Console.ResetColor();
-                        Console.WriteLine("Send your string...");
+
+                        // Close until your next request.
+                        Client.Close();
                     }
                     catch (Exception ex)
                     {

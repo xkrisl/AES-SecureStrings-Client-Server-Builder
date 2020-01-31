@@ -14,15 +14,13 @@ namespace Server
             var Port = 11000;
             IPEndPoint RemoteHost = new IPEndPoint(IPAddress.Any, Port);
             //
-
-            using (var Server = new UdpClient(Port))
+            while (true)
             {
-                SecurityController _security = new SecurityController();
-                // Password for decrypting AES protected strings the client is sending you.
-                string AESPassword = "Password123";
-
-                while (true)
+                using (var Server = new UdpClient(Port))
                 {
+                    SecurityController _security = new SecurityController();
+                    // Password for decrypting AES protected strings the client is sending you.
+                    string AESPassword = "Password123";
                     try
                     {
                         // Receive the packet, translate and send back.
@@ -51,6 +49,7 @@ namespace Server
                         Console.ResetColor();
                     }
                 }
+
             }
         }
 
